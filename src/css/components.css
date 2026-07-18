@@ -27,6 +27,7 @@
 .button--ghost { background: transparent; color: var(--accent); }
 .button--ink { border-color: var(--ink); background: var(--ink); color: var(--paper); }
 .text-link { color: var(--accent); font-weight: 700; text-decoration-thickness: 1px; }
+.text-link { min-height: 44px; display: inline-flex; align-items: center; padding-block: .35rem; }
 .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem .8rem; }
 .product-card { min-width: 0; }
 .product-card__image { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--paper-deep); }

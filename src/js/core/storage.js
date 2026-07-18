@@ -3,6 +3,7 @@ export function createSafeStorage(storage = globalThis.localStorage) {
 
   return {
     get(key, fallback) {
+      if (memory.has(key)) return memory.get(key);
       try {
         const value = storage?.getItem(key);
         return value === null || value === undefined ? fallback : JSON.parse(value);
@@ -13,7 +14,8 @@ export function createSafeStorage(storage = globalThis.localStorage) {
     set(key, value) {
       memory.set(key, value);
       try {
-        storage?.setItem(key, JSON.stringify(value));
+        if (!storage?.setItem) return false;
+        storage.setItem(key, JSON.stringify(value));
         return true;
       } catch {
         return false;

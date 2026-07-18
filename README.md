@@ -9,6 +9,7 @@
 - 侘寂編輯風與都會百貨網格，提供森林綠、酒紅色、倫敦藍、聰穎黃四組主題。
 - 16 筆跨四類的擬真商品與案例資料，使用不含 API 金鑰的 Unsplash CDN 圖片。
 - 商品搜尋、分類、價格篩選、排序與分頁。
+- 商品狀態篩選與手機可收合篩選器。
 - 商品詳情、分類專屬欄位、收藏、最近瀏覽與庫存限制。
 - 購物車、優惠碼 `KURASHI100`、免運門檻與費用摘要。
 - 信用卡、ATM、超商代碼三種安全付款模擬，全程標示不產生真實交易。
@@ -45,6 +46,7 @@ npm run serve
 ```text
 kurashi-market/
 ├─ index.html / products.html / product.html
+├─ products/                16 個可索引的靜態商品頁
 ├─ cart.html / checkout.html / order-complete.html
 ├─ favorites.html / account.html / about.html / faq.html
 ├─ src/
@@ -65,6 +67,12 @@ kurashi-market/
 
 ```powershell
 npm test
+```
+
+商品資料更新後，重新產生靜態商品頁與 Sitemap：
+
+```powershell
+npm run generate:products
 ```
 
 測試涵蓋安全儲存、購物車、商品查詢、結帳驗證、付款模擬、狀態保存、主題與共用 UI 輸出。完整人工測試清單請見 `docs/TEST-PLAN.md`。

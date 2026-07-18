@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSafeStorage } from '../src/js/core/storage.js';
 import { createShopState } from '../src/js/core/shop-state.js';
+import { calculateCart } from '../src/js/core/cart.js';
 
 const blockedStorage = {
   getItem() { throw new Error('blocked'); }, setItem() { throw new Error('blocked'); }, removeItem() { throw new Error('blocked'); }
@@ -41,8 +42,33 @@ test('最近瀏覽去除重複並只保留八筆', () => {
 test('完成結帳後可保存訂單並清空購物車', () => {
   const state = createShopState(createSafeStorage(blockedStorage), () => {});
   state.addToCart(product, 1, '預設');
-  state.saveOrder({ id: 'KM-TEST', total: 700 });
+  state.saveOrder({
+    id: 'KM-TEST', createdAt: new Date().toISOString(), status: '測試訂單', items: [], totals: { total: 700 },
+    payment: { method: 'atm', reference: 'TEST-ATM', isSimulation: true }
+  });
   state.clearCart();
   assert.equal(state.getOrders()[0].id, 'KM-TEST');
   assert.deepEqual(state.getCart(), []);
+});
+
+test('優惠碼跨頁保存在共用狀態', () => {
+  const state = createShopState(createSafeStorage(blockedStorage), () => {});
+  state.addToCart(product, 2, '預設');
+  state.setCoupon(' kurashi100 ');
+  assert.equal(state.getCoupon(), 'KURASHI100');
+  assert.equal(calculateCart(state.getCart(), { coupon: state.getCoupon() }).total, 1200);
+});
+
+test('損壞的持久資料會被安全丟棄', () => {
+  const malformedStorage = createSafeStorage({
+    getItem(key) {
+      if (key === 'kurashi.cart') return JSON.stringify({ not: 'an array' });
+      if (key === 'kurashi.orders') return JSON.stringify([{ id: '<img onerror=alert(1)>', totals: null }]);
+      return null;
+    },
+    setItem() {}, removeItem() {}
+  });
+  const state = createShopState(malformedStorage, () => {});
+  assert.deepEqual(state.getCart(), []);
+  assert.deepEqual(state.getOrders(), []);
 });

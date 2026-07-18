@@ -39,3 +39,11 @@ test('空購物車不收取運費', () => {
   assert.equal(calculateCart([]).total, 0);
   assert.equal(calculateCart([]).shipping, 0);
 });
+
+test('客製商品強制最低訂購量', () => {
+  const invitation = { ...product, id: 'invite-1', stock: 500, minimumQuantity: 50 };
+  const items = addCartItem([], invitation, 1, '月白');
+  assert.equal(items[0].quantity, 50);
+  assert.equal(items[0].minimumQuantity, 50);
+  assert.equal(updateCartQuantity(items, 'invite-1', '月白', 2, 500, 50)[0].quantity, 50);
+});

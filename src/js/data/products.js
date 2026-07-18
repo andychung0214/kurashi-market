@@ -136,4 +136,15 @@ export const products = [
     images: [image('photo-1527515637462-cff94eecc1ac')], tags: ['木工', '清潔', '衣物'],
     details: { material: '山毛櫸、天然鬃毛', size: '26 × 4 cm', origin: '德國', care: '順毛清理、保持乾燥' }
   }
-];
+].map((product) => ({
+  ...product,
+  condition: product.category === 'books' ? 'used' : product.kind === 'service' ? 'service' : 'new',
+  minimumQuantity: product.category === 'invitations' ? Number.parseInt(product.details.minimum, 10) : 1,
+  variants: product.category === 'invitations'
+    ? ['經典印刷', '霧金印刷']
+    : product.category === 'goods'
+      ? ['原色']
+      : product.category === 'books'
+        ? ['單冊']
+        : []
+}));

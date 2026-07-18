@@ -1,4 +1,10 @@
-const clampQuantity = (quantity, stock) => Math.min(Math.max(0, Number(quantity) || 0), Math.max(0, stock));
+const clampQuantity = (quantity, stock, minimumQuantity = 1) => {
+  const requested = Number(quantity) || 0;
+  const safeStock = Math.max(0, Number(stock) || 0);
+  const minimum = Math.max(1, Number(minimumQuantity) || 1);
+  if (requested <= 0 || safeStock < minimum) return 0;
+  return Math.min(Math.max(minimum, requested), safeStock);
+};
 
 export function addCartItem(items, product, quantity = 1, variant = '預設') {
   if (product.kind === 'service' || product.stock <= 0) return [...items];
@@ -6,11 +12,11 @@ export function addCartItem(items, product, quantity = 1, variant = '預設') {
   const next = items.map((item) => ({ ...item }));
 
   if (index >= 0) {
-    next[index].quantity = clampQuantity(next[index].quantity + Number(quantity), product.stock);
+    next[index].quantity = clampQuantity(next[index].quantity + Number(quantity), product.stock, product.minimumQuantity);
     return next;
   }
 
-  const safeQuantity = clampQuantity(quantity, product.stock);
+  const safeQuantity = clampQuantity(quantity, product.stock, product.minimumQuantity);
   if (safeQuantity === 0) return next;
   return [...next, {
     productId: product.id,
@@ -18,16 +24,17 @@ export function addCartItem(items, product, quantity = 1, variant = '預設') {
     price: product.price,
     image: product.images?.[0] ?? '',
     stock: product.stock,
+    minimumQuantity: product.minimumQuantity ?? 1,
     variant,
     quantity: safeQuantity
   }];
 }
 
-export function updateCartQuantity(items, productId, variant, quantity, stock) {
-  const safeQuantity = clampQuantity(quantity, stock);
+export function updateCartQuantity(items, productId, variant, quantity, stock, minimumQuantity = 1) {
+  const safeQuantity = clampQuantity(quantity, stock, minimumQuantity);
   if (safeQuantity === 0) return removeCartItem(items, productId, variant);
   return items.map((item) => item.productId === productId && item.variant === variant
-    ? { ...item, quantity: safeQuantity, stock }
+    ? { ...item, quantity: safeQuantity, stock, minimumQuantity }
     : { ...item });
 }
 

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate:products": "node scripts/generate-product-pages.mjs",
     "test": "node --test",
     "serve": "python -m http.server 4173"
   }

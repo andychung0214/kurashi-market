@@ -1,10 +1,6 @@
-const categoryNames = { books: '二手書', invitations: '喜帖', interiors: '室內設計', goods: '百貨雜物' };
+import { escapeHtml } from '../core/html.js';
 
-function escapeHtml(value = '') {
-  return String(value).replace(/[&<>'"]/g, (character) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-  })[character]);
-}
+const categoryNames = { books: '二手書', invitations: '喜帖', interiors: '室內設計', goods: '百貨雜物' };
 
 function formatPrice(price) {
   return `NT$${Number(price).toLocaleString('zh-TW')}`;
@@ -12,7 +8,7 @@ function formatPrice(price) {
 
 export function renderProductCard(product) {
   const isService = product.kind === 'service';
-  const url = `product.html?id=${encodeURIComponent(product.id)}`;
+  const url = `products/${encodeURIComponent(product.id)}.html`;
   const image = escapeHtml(product.images?.[0] ?? 'src/assets/placeholder-product.svg');
   return `
     <article class="product-card" data-category="${escapeHtml(product.category)}">

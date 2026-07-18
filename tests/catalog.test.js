@@ -27,3 +27,10 @@ test('分頁限制頁碼並回傳頁數資訊', () => {
   const result = paginate([1, 2, 3, 4, 5], 9, 2);
   assert.deepEqual(result, { items: [5], page: 3, pageSize: 2, totalItems: 5, totalPages: 3 });
 });
+
+test('商品可依全新與二手狀態篩選', () => {
+  const used = filterProducts(products, { condition: 'used' });
+  const newItems = filterProducts(products, { condition: 'new' });
+  assert.ok(used.length > 0 && used.every((item) => item.condition === 'used'));
+  assert.ok(newItems.length > 0 && newItems.every((item) => item.condition === 'new'));
+});

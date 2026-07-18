@@ -2,12 +2,13 @@ import { calculateCart } from '../core/cart.js';
 import { createSafeStorage } from '../core/storage.js';
 import { createShopState } from '../core/shop-state.js';
 import { initShell } from '../ui/shell.js';
+import { escapeHtml } from '../core/html.js';
 
 initShell();
 const state = createShopState(createSafeStorage());
 const itemsNode = document.querySelector('[data-cart-items]');
 const summaryNode = document.querySelector('[data-cart-summary]');
-let coupon = '';
+let coupon = state.getCoupon();
 const money = (value) => `NT$${value.toLocaleString('zh-TW')}`;
 
 function render() {
@@ -15,10 +16,10 @@ function render() {
   const totals = calculateCart(items, { coupon });
   itemsNode.innerHTML = items.length ? items.map((item) => `
     <article class="cart-item">
-      <img src="${item.image}" alt="${item.name}" width="160" height="200" onerror="this.onerror=null;this.src='src/assets/placeholder-product.svg'">
-      <div><h2>${item.name}</h2><p class="muted">規格：${item.variant}</p><p>${money(item.price)}</p>
-        <div class="quantity-control"><label for="qty-${item.productId}">數量</label><input id="qty-${item.productId}" data-quantity data-product-id="${item.productId}" data-variant="${item.variant}" data-stock="${item.stock}" type="number" min="1" max="${item.stock}" value="${item.quantity}">
-        <button class="text-link" data-remove data-product-id="${item.productId}" data-variant="${item.variant}" type="button">移除</button></div>
+      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" width="160" height="200" onerror="this.onerror=null;this.src='src/assets/placeholder-product.svg'">
+      <div><h2>${escapeHtml(item.name)}</h2><p class="muted">規格：${escapeHtml(item.variant)}</p><p>${money(item.price)}</p>
+        <div class="quantity-control"><label for="qty-${escapeHtml(item.productId)}">數量</label><input id="qty-${escapeHtml(item.productId)}" data-quantity data-product-id="${escapeHtml(item.productId)}" data-variant="${escapeHtml(item.variant)}" data-stock="${item.stock}" type="number" min="${item.minimumQuantity}" max="${item.stock}" value="${item.quantity}">
+        <button class="text-link" data-remove data-product-id="${escapeHtml(item.productId)}" data-variant="${escapeHtml(item.variant)}" type="button">移除</button></div>
       </div><strong>${money(item.price * item.quantity)}</strong>
     </article>`).join('') : '<div class="empty-state"><h2>購物車還是空的</h2><p>從一本書或一件器物開始。</p><a class="button" href="products.html">看看所有選物</a></div>';
 
@@ -35,7 +36,7 @@ function render() {
     state.removeFromCart(button.dataset.productId, button.dataset.variant); render();
   }));
   summaryNode.querySelector('[data-coupon-form]')?.addEventListener('submit', (event) => {
-    event.preventDefault(); coupon = String(new FormData(event.currentTarget).get('coupon') ?? '').trim(); render();
+    event.preventDefault(); coupon = state.setCoupon(String(new FormData(event.currentTarget).get('coupon') ?? '')); render();
   });
 }
 

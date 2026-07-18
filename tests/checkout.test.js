@@ -37,3 +37,19 @@ test('模擬訂單不保存完整卡號或安全碼', () => {
   assert.equal(order.payment.isSimulation, true);
   assert.match(order.id, /^KM-/);
 });
+
+test('信用卡只接受公開測試卡號', () => {
+  assert.equal(validateCheckout({ ...valid, paymentMethod: 'card', cardNumber: '4111111111111111', cvv: '123' }).cardNumber,
+    '請使用畫面提供的公開測試卡號');
+  assert.equal(validateCheckout({ ...valid, paymentMethod: 'card', cardNumber: '4242 4242 4242 4242', cvv: '123' }).cardNumber, undefined);
+});
+
+test('ATM 與超商代碼提供測試繳費資訊', () => {
+  const atm = createTestPayment('atm', { id: 'KM-ATM-1', total: 1200 });
+  const cvs = createTestPayment('cvs', { id: 'KM-CVS-1', total: 1200 });
+  assert.equal(atm.bankCode, 'TEST');
+  assert.match(atm.account, /^TEST-/);
+  assert.match(atm.expiresAt, /^\d{4}-/);
+  assert.match(cvs.paymentCode, /^TEST-/);
+  assert.match(cvs.expiresAt, /^\d{4}-/);
+});

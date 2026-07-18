@@ -51,7 +51,8 @@ export function shellMarkup({ active = '', cartCount = 0 } = {}) {
 }
 
 function cartCount(storage) {
-  return storage.get('kurashi.cart', []).reduce((sum, item) => sum + item.quantity, 0);
+  const cart = storage.get('kurashi.cart', []);
+  return Array.isArray(cart) ? cart.reduce((sum, item) => sum + (Number(item?.quantity) || 0), 0) : 0;
 }
 
 export function initShell({ active = '' } = {}) {

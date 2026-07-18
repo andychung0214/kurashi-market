@@ -12,7 +12,7 @@ const resultNode = document.querySelector('[data-product-results]');
 const countNode = document.querySelector('[data-results-count]');
 const paginationNode = document.querySelector('[data-pagination]');
 
-for (const name of ['query', 'category', 'minPrice', 'maxPrice']) {
+for (const name of ['query', 'category', 'condition', 'minPrice', 'maxPrice']) {
   const field = form?.elements.namedItem(name);
   if (field && params.has(name)) field.value = params.get(name);
 }
@@ -26,7 +26,7 @@ function pageUrl(page) {
 
 function render() {
   const filters = {
-    query: params.get('query') ?? '', category: params.get('category') ?? 'all',
+    query: params.get('query') ?? '', category: params.get('category') ?? 'all', condition: params.get('condition') ?? 'all',
     minPrice: params.get('minPrice') ?? '', maxPrice: params.get('maxPrice') ?? ''
   };
   const filtered = sortProducts(filterProducts(products, filters), params.get('sort') ?? 'featured');

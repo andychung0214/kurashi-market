@@ -4,16 +4,17 @@ function searchableText(product) {
     .toLocaleLowerCase('zh-Hant');
 }
 
-export function filterProducts(products, { query = '', category = 'all', minPrice = '', maxPrice = '' } = {}) {
+export function filterProducts(products, { query = '', category = 'all', condition = 'all', minPrice = '', maxPrice = '' } = {}) {
   const needle = query.trim().toLocaleLowerCase('zh-Hant');
   const minimum = minPrice === '' ? Number.NEGATIVE_INFINITY : Number(minPrice);
   const maximum = maxPrice === '' ? Number.POSITIVE_INFINITY : Number(maxPrice);
 
   return products.filter((product) => {
     const categoryMatches = category === 'all' || !category || product.category === category;
+    const conditionMatches = condition === 'all' || !condition || product.condition === condition;
     const queryMatches = !needle || searchableText(product).includes(needle);
     const priceMatches = product.kind === 'service' || (product.price >= minimum && product.price <= maximum);
-    return categoryMatches && queryMatches && priceMatches;
+    return categoryMatches && conditionMatches && queryMatches && priceMatches;
   });
 }
 

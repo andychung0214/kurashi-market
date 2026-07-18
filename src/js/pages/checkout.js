@@ -3,6 +3,7 @@ import { validateCheckout, createSimulationOrder } from '../core/checkout.js';
 import { createSafeStorage } from '../core/storage.js';
 import { createShopState } from '../core/shop-state.js';
 import { initShell } from '../ui/shell.js';
+import { escapeHtml } from '../core/html.js';
 
 initShell();
 const state = createShopState(createSafeStorage());
@@ -15,8 +16,9 @@ const money = (value) => `NT$${value.toLocaleString('zh-TW')}`;
 if (!cart.length) {
   root.innerHTML = '<div class="empty-state"><h2>購物車是空的</h2><p>結帳前先選一件適合日常的物件。</p><a class="button" href="products.html">瀏覽所有選物</a></div>';
 } else {
-  const totals = calculateCart(cart);
-  summary.innerHTML = `<h2>訂單摘要</h2><ul class="summary-items">${cart.map((item) => `<li><span>${item.name} × ${item.quantity}</span><strong>${money(item.price * item.quantity)}</strong></li>`).join('')}</ul><dl class="totals"><div><dt>商品小計</dt><dd>${money(totals.subtotal)}</dd></div><div><dt>運費</dt><dd>${money(totals.shipping)}</dd></div><div class="totals__grand"><dt>測試合計</dt><dd>${money(totals.total)}</dd></div></dl><p class="simulation-note">本頁不會把資料送往綠界或其他金流服務。</p>`;
+  const coupon = state.getCoupon();
+  const totals = calculateCart(cart, { coupon });
+  summary.innerHTML = `<h2>訂單摘要</h2><ul class="summary-items">${cart.map((item) => `<li><span>${escapeHtml(item.name)} × ${item.quantity}</span><strong>${money(item.price * item.quantity)}</strong></li>`).join('')}</ul><dl class="totals"><div><dt>商品小計</dt><dd>${money(totals.subtotal)}</dd></div>${totals.discount ? `<div><dt>優惠碼 ${escapeHtml(coupon)}</dt><dd>− ${money(totals.discount)}</dd></div>` : ''}<div><dt>運費</dt><dd>${money(totals.shipping)}</dd></div><div class="totals__grand"><dt>測試合計</dt><dd>${money(totals.total)}</dd></div></dl><p class="simulation-note">本頁不會把資料送往綠界或其他金流服務。</p>`;
 
   function updatePaymentFields() {
     const method = form.elements.paymentMethod.value;
@@ -33,6 +35,7 @@ if (!cart.length) {
     const errors = validateCheckout(input);
     if (!form.elements.simulationConsent.checked) errors.simulationConsent = '請確認了解這是模擬付款';
     document.querySelectorAll('.error-text').forEach((node) => { node.textContent = ''; });
+    form.querySelectorAll('[aria-invalid="true"]').forEach((node) => { node.removeAttribute('aria-invalid'); node.removeAttribute('aria-describedby'); });
     for (const [field, message] of Object.entries(errors)) {
       const errorNode = document.querySelector(`#error-${field}`);
       if (errorNode) errorNode.textContent = message;
@@ -44,7 +47,6 @@ if (!cart.length) {
       errorSummary.hidden = false;
       errorSummary.innerHTML = `<strong>請修正 ${Object.keys(errors).length} 個欄位</strong><p>${Object.values(errors)[0]}</p>`;
       errorSummary.focus();
-      form.elements[Object.keys(errors)[0]]?.focus?.();
       return;
     }
     errorSummary.hidden = true;
