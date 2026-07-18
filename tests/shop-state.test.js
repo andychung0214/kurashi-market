@@ -25,6 +25,16 @@ test('購物車可更新數量與移除商品', () => {
   assert.deepEqual(state.getCart(), []);
 });
 
+test('分類停用後會移除不再可見的購物車商品', () => {
+  const state = createShopState(createSafeStorage(blockedStorage), () => {});
+  state.addToCart(product, 1, '預設');
+  state.addToCart({ ...product, id: 'goods-1', name: '器物' }, 1, '預設');
+  const result = state.reconcileCart(['goods-1']);
+  assert.equal(result.removedCount, 1);
+  assert.deepEqual(result.items.map(({ productId }) => productId), ['goods-1']);
+  assert.deepEqual(state.getCart().map(({ productId }) => productId), ['goods-1']);
+});
+
 test('收藏切換會加入再移除識別碼', () => {
   const state = createShopState(createSafeStorage(blockedStorage), () => {});
   assert.deepEqual(state.toggleFavorite('book-1'), ['book-1']);

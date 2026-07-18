@@ -76,6 +76,14 @@ export function createShopState(storage, notify = browserNotify) {
     removeFromCart(productId, variant) {
       return save(keys.cart, removeCartItem(sanitizeCart(storage.get(keys.cart, [])), productId, variant));
     },
+    reconcileCart(visibleProductIds) {
+      const visibleIds = new Set(visibleProductIds);
+      const current = sanitizeCart(storage.get(keys.cart, []));
+      const items = current.filter((item) => visibleIds.has(item.productId));
+      const removedCount = current.length - items.length;
+      if (removedCount) save(keys.cart, items);
+      return { items, removedCount };
+    },
     getFavorites: () => {
       const value = storage.get(keys.favorites, []);
       return Array.isArray(value) ? value.filter((id) => typeof id === 'string').slice(0, 100) : [];

@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { shellMarkup } from '../src/js/ui/shell.js';
 import { renderProductCard } from '../src/js/ui/product-card.js';
+import { renderProductBreadcrumb } from '../src/js/ui/product-detail.js';
 import { categoryMarkup } from '../src/js/pages/home.js';
-import { categoryOptionsMarkup } from '../src/js/pages/products.js';
+import { catalogResultsMarkup, categoryOptionsMarkup } from '../src/js/pages/products.js';
 import { categoryFaqMarkup } from '../src/js/pages/faq.js';
 
 test('網站外框包含主要導覽與購物車數量', () => {
@@ -64,4 +65,21 @@ test('分類常見問題只呈現有內容的啟用分類並跳脫文字', () =>
   assert.match(markup, /&lt;問題&gt;/);
   assert.match(markup, /答案 &amp; 說明/);
   assert.doesNotMatch(markup, /分類二/);
+});
+
+test('商品麵包屑會編碼分類網址並跳脫分類文字', () => {
+  const markup = renderProductBreadcrumb(
+    { category: 'books & notes', name: '<商品>' },
+    '<script>分類</script>'
+  );
+  assert.match(markup, /category=books%20%26%20notes/);
+  assert.match(markup, /&lt;script&gt;分類&lt;\/script&gt;/);
+  assert.match(markup, /&lt;商品&gt;/);
+  assert.doesNotMatch(markup, /<script>/);
+});
+
+test('商品列表在零分類時顯示專屬空狀態', () => {
+  assert.match(catalogResultsMarkup([], { hasCategories: false }), /目前尚無分類/);
+  assert.doesNotMatch(catalogResultsMarkup([], { hasCategories: false }), /放寬價格/);
+  assert.match(catalogResultsMarkup([], { hasCategories: true }), /放寬價格/);
 });

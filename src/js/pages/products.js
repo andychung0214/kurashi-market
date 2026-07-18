@@ -11,6 +11,14 @@ export function categoryOptionsMarkup(items) {
     .map(({ id, name }) => `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`).join('');
 }
 
+export function catalogResultsMarkup(items, { hasCategories = true } = {}) {
+  if (items.length) return items.map(renderProductCard).join('');
+  if (!hasCategories) {
+    return '<div class="empty-state"><h2>目前尚無分類</h2><p>新的生活提案正在整理中，歡迎稍後再來看看。</p></div>';
+  }
+  return '<div class="empty-state"><h2>這次沒有找到相符選物</h2><p>試著放寬價格或改用其他關鍵字。</p><a class="button" href="products.html">清除所有條件</a></div>';
+}
+
 function initProducts() {
   initShell({ active: 'products' });
   const enabledCategories = resolveEnabledCategories(categories, storefrontConfig.enabledCategoryIds);
@@ -47,9 +55,7 @@ function initProducts() {
     const filtered = sortProducts(filterProducts(visibleProducts, filters), params.get('sort') ?? 'featured');
     const page = paginate(filtered, params.get('page') ?? 1, 8);
     countNode.textContent = `找到 ${page.totalItems} 件選物`;
-    resultNode.innerHTML = page.items.length
-      ? page.items.map(renderProductCard).join('')
-      : '<div class="empty-state"><h2>這次沒有找到相符選物</h2><p>試著放寬價格或改用其他關鍵字。</p><a class="button" href="products.html">清除所有條件</a></div>';
+    resultNode.innerHTML = catalogResultsMarkup(page.items, { hasCategories: enabledCategories.length > 0 });
     paginationNode.innerHTML = page.totalPages <= 1 ? '' : Array.from({ length: page.totalPages }, (_, index) => {
       const number = index + 1;
       return `<a href="${pageUrl(number)}"${number === page.page ? ' aria-current="page"' : ''} aria-label="第 ${number} 頁">${number}</a>`;

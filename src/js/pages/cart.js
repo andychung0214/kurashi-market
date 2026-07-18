@@ -1,11 +1,17 @@
 import { calculateCart } from '../core/cart.js';
 import { createSafeStorage } from '../core/storage.js';
 import { createShopState } from '../core/shop-state.js';
+import { filterProductsByCategories, resolveEnabledCategories } from '../core/storefront.js';
+import { categories, products } from '../data/products.js';
+import { storefrontConfig } from '../data/storefront.js';
 import { initShell } from '../ui/shell.js';
 import { escapeHtml } from '../core/html.js';
 
 initShell();
 const state = createShopState(createSafeStorage());
+const enabledCategories = resolveEnabledCategories(categories, storefrontConfig.enabledCategoryIds);
+const visibleProducts = filterProductsByCategories(products, enabledCategories);
+const reconciliation = state.reconcileCart(visibleProducts.map(({ id }) => id));
 const itemsNode = document.querySelector('[data-cart-items]');
 const summaryNode = document.querySelector('[data-cart-summary]');
 let coupon = state.getCoupon();
@@ -14,14 +20,17 @@ const money = (value) => `NT$${value.toLocaleString('zh-TW')}`;
 function render() {
   const items = state.getCart();
   const totals = calculateCart(items, { coupon });
-  itemsNode.innerHTML = items.length ? items.map((item) => `
+  const availabilityNotice = reconciliation.removedCount
+    ? `<p class="simulation-note" role="status">已移除 ${reconciliation.removedCount} 件目前未提供的商品。</p>`
+    : '';
+  itemsNode.innerHTML = availabilityNotice + (items.length ? items.map((item) => `
     <article class="cart-item">
       <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" width="160" height="200" onerror="this.onerror=null;this.src='src/assets/placeholder-product.svg'">
       <div><h2>${escapeHtml(item.name)}</h2><p class="muted">規格：${escapeHtml(item.variant)}</p><p>${money(item.price)}</p>
         <div class="quantity-control"><label for="qty-${escapeHtml(item.productId)}">數量</label><input id="qty-${escapeHtml(item.productId)}" data-quantity data-product-id="${escapeHtml(item.productId)}" data-variant="${escapeHtml(item.variant)}" data-stock="${item.stock}" type="number" min="${item.minimumQuantity}" max="${item.stock}" value="${item.quantity}">
         <button class="text-link" data-remove data-product-id="${escapeHtml(item.productId)}" data-variant="${escapeHtml(item.variant)}" type="button">移除</button></div>
       </div><strong>${money(item.price * item.quantity)}</strong>
-    </article>`).join('') : '<div class="empty-state"><h2>購物車還是空的</h2><p>從一本書或一件器物開始。</p><a class="button" href="products.html">看看所有選物</a></div>';
+    </article>`).join('') : '<div class="empty-state"><h2>購物車還是空的</h2><p>從目前的生活提案開始探索。</p><a class="button" href="products.html">看看所有選物</a></div>');
 
   summaryNode.innerHTML = `<h2>金額摘要</h2>
     ${totals.remainingForFreeShipping > 0 && items.length ? `<p class="shipping-note">再選 ${money(totals.remainingForFreeShipping)} 即享免運。</p>` : items.length ? '<p class="shipping-note">已達免運門檻。</p>' : ''}

@@ -1,10 +1,13 @@
 import { products, categories } from '../data/products.js';
 import { storefrontConfig } from '../data/storefront.js';
 import { filterProductsByCategories, resolveEnabledCategories } from '../core/storefront.js';
+import { escapeHtml } from '../core/html.js';
+import { createProductSchema } from '../core/schema.js';
 import { createSafeStorage } from '../core/storage.js';
 import { createShopState } from '../core/shop-state.js';
 import { initShell } from '../ui/shell.js';
 import { renderProductCard } from '../ui/product-card.js';
+import { renderProductBreadcrumb } from '../ui/product-detail.js';
 
 initShell({ active: 'products' });
 const storage = createSafeStorage();
@@ -38,17 +41,16 @@ if (!product) {
   if (!document.querySelector('script[type="application/ld+json"]')) {
     const schema = document.createElement('script');
     schema.type = 'application/ld+json';
-    schema.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': isService ? 'Service' : 'Product', name: product.name, description: product.summary, image: product.images,
-      ...(isService ? { serviceType: '室內設計諮詢' } : { offers: { '@type': 'Offer', priceCurrency: 'TWD', price: product.price, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: canonical } }) });
+    schema.textContent = JSON.stringify(createProductSchema(product, canonical, storefrontConfig.brand));
     document.head.append(schema);
   }
 
   root.innerHTML = `
-    <nav class="breadcrumbs" aria-label="麵包屑"><a href="index.html">首頁</a><span>/</span><a href="products.html?category=${product.category}">${category}</a><span>/</span><span aria-current="page">${product.name}</span></nav>
+    ${renderProductBreadcrumb(product, category)}
     <article class="product-detail">
       <div class="product-gallery">${product.images.map((image, index) => `<img src="${image}" alt="${product.name}${index ? `細節 ${index + 1}` : ''}" width="900" height="1100" ${index ? 'loading="lazy"' : ''} onerror="this.onerror=null;this.src='src/assets/placeholder-product.svg'">`).join('')}</div>
       <div class="product-info">
-        <p class="eyebrow">${category}・${product.badge}</p><h1>${product.name}</h1><p class="lede">${product.summary}</p>
+        <p class="eyebrow">${escapeHtml(category)}・${escapeHtml(product.badge)}</p><h1>${product.name}</h1><p class="lede">${product.summary}</p>
         ${isService ? '<p class="product-price">依需求正式估價</p>' : `<p class="product-price">NT$${product.price.toLocaleString('zh-TW')}</p>`}
         <p>${product.description}</p>
         <dl class="detail-list">${Object.entries(product.details).map(([key, value]) => `<div><dt>${detailLabels[key] ?? key}</dt><dd>${value}</dd></div>`).join('')}</dl>

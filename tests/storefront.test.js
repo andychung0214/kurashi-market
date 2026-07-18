@@ -25,6 +25,10 @@ test('空設定不會擅自恢復全部分類', () => {
   assert.deepEqual(resolveEnabledCategories(categories, []), []);
 });
 
+test('重複分類識別碼只解析一次', () => {
+  assert.deepEqual(resolveEnabledCategories(categories, ['category-1', 'category-1']).map(({ id }) => id), ['category-1']);
+});
+
 test('商品只保留啟用分類', () => {
   const products = [{ id: 'a', category: 'category-1' }, { id: 'b', category: 'category-2' }];
   assert.deepEqual(filterProductsByCategories(products, [categories[1]]).map(({ id }) => id), ['b']);

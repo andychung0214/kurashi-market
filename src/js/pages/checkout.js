@@ -2,20 +2,31 @@ import { calculateCart } from '../core/cart.js';
 import { validateCheckout, createSimulationOrder } from '../core/checkout.js';
 import { createSafeStorage } from '../core/storage.js';
 import { createShopState } from '../core/shop-state.js';
+import { filterProductsByCategories, resolveEnabledCategories } from '../core/storefront.js';
+import { categories, products } from '../data/products.js';
+import { storefrontConfig } from '../data/storefront.js';
 import { initShell } from '../ui/shell.js';
 import { escapeHtml } from '../core/html.js';
 
 initShell();
 const state = createShopState(createSafeStorage());
-const cart = state.getCart();
+const enabledCategories = resolveEnabledCategories(categories, storefrontConfig.enabledCategoryIds);
+const visibleProducts = filterProductsByCategories(products, enabledCategories);
+const reconciliation = state.reconcileCart(visibleProducts.map(({ id }) => id));
+const cart = reconciliation.items;
 const root = document.querySelector('[data-checkout-root]');
 const form = document.querySelector('[data-checkout-form]');
 const summary = document.querySelector('[data-checkout-summary]');
 const money = (value) => `NT$${value.toLocaleString('zh-TW')}`;
 
 if (!cart.length) {
-  root.innerHTML = '<div class="empty-state"><h2>購物車是空的</h2><p>結帳前先選一件適合日常的物件。</p><a class="button" href="products.html">瀏覽所有選物</a></div>';
+  root.innerHTML = reconciliation.removedCount
+    ? '<div class="empty-state"><h2>購物車中的商品目前未提供</h2><p>商品分類可能已調整，請回到目前的生活提案重新選擇。</p><a class="button" href="products.html">瀏覽目前提案</a></div>'
+    : '<div class="empty-state"><h2>購物車是空的</h2><p>結帳前先選一件適合日常的物件。</p><a class="button" href="products.html">瀏覽所有選物</a></div>';
 } else {
+  if (reconciliation.removedCount) {
+    root.insertAdjacentHTML('afterbegin', `<p class="simulation-note" role="status">已移除 ${reconciliation.removedCount} 件目前未提供的商品，訂單金額已重新計算。</p>`);
+  }
   const coupon = state.getCoupon();
   const totals = calculateCart(cart, { coupon });
   summary.innerHTML = `<h2>訂單摘要</h2><ul class="summary-items">${cart.map((item) => `<li><span>${escapeHtml(item.name)} × ${item.quantity}</span><strong>${money(item.price * item.quantity)}</strong></li>`).join('')}</ul><dl class="totals"><div><dt>商品小計</dt><dd>${money(totals.subtotal)}</dd></div>${totals.discount ? `<div><dt>優惠碼 ${escapeHtml(coupon)}</dt><dd>− ${money(totals.discount)}</dd></div>` : ''}<div><dt>運費</dt><dd>${money(totals.shipping)}</dd></div><div class="totals__grand"><dt>測試合計</dt><dd>${money(totals.total)}</dd></div></dl><p class="simulation-note">本頁不會把資料送往綠界或其他金流服務。</p>`;
