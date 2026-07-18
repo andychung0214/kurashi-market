@@ -26,7 +26,7 @@ test('更新數量限制庫存，零以下移除商品', () => {
 
 test('購物車正確計算免運門檻與折扣', () => {
   const items = addCartItem([], product, 2, '預設');
-  assert.deepEqual(calculateCart(items, { coupon: 'kurashi100' }), {
+  assert.deepEqual(calculateCart(items, { coupon: 'amuharu100' }), {
     subtotal: 1200,
     discount: 100,
     shipping: 100,

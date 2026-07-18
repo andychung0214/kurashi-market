@@ -26,7 +26,7 @@ function render() {
   summaryNode.innerHTML = `<h2>金額摘要</h2>
     ${totals.remainingForFreeShipping > 0 && items.length ? `<p class="shipping-note">再選 ${money(totals.remainingForFreeShipping)} 即享免運。</p>` : items.length ? '<p class="shipping-note">已達免運門檻。</p>' : ''}
     <dl class="totals"><div><dt>商品小計</dt><dd>${money(totals.subtotal)}</dd></div><div><dt>優惠折抵</dt><dd>− ${money(totals.discount)}</dd></div><div><dt>運費</dt><dd>${money(totals.shipping)}</dd></div><div class="totals__grand"><dt>合計</dt><dd>${money(totals.total)}</dd></div></dl>
-    <form class="coupon-form" data-coupon-form><div class="form-field"><label for="coupon">測試優惠碼</label><input id="coupon" name="coupon" value="${escapeHtml(coupon)}" placeholder="KURASHI100"></div><button class="button button--ghost" type="submit">套用</button></form>
+    <form class="coupon-form" data-coupon-form><div class="form-field"><label for="coupon">測試優惠碼</label><input id="coupon" name="coupon" value="${escapeHtml(coupon)}" placeholder="AMUHARU100"></div><button class="button button--ghost" type="submit">套用</button></form>
     ${items.length ? '<a class="button button--ink checkout-button" href="checkout.html">前往測試結帳</a>' : ''}<p class="muted">結帳流程不會產生真實交易。</p>`;
 
   itemsNode.querySelectorAll('[data-quantity]').forEach((input) => input.addEventListener('change', () => {

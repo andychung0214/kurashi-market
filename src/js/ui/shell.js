@@ -1,11 +1,14 @@
 import { createSafeStorage } from '../core/storage.js';
+import { storefrontConfig } from '../data/storefront.js';
 import { applyTheme, normalizeTheme } from './theme.js';
+
+const { brand } = storefrontConfig;
 
 const navItems = [
   ['home', '首頁', 'index.html'],
   ['products', '選物', 'products.html'],
   ['favorites', '收藏', 'favorites.html'],
-  ['about', '關於暮集', 'about.html'],
+  ['about', '關於我們', 'about.html'],
   ['faq', '購物說明', 'faq.html']
 ];
 
@@ -20,9 +23,9 @@ export function shellMarkup({ active = '', cartCount = 0 } = {}) {
       <a class="skip-link" href="#main-content">跳至主要內容</a>
       <div class="notice-bar"><span>滿 NT$2,000 免運</span><span>靜態展示商店・付款皆為測試模擬</span></div>
       <div class="site-header__inner page-shell">
-        <a class="brand" href="index.html" aria-label="暮集選物所首頁">
-          <span class="brand__mark" aria-hidden="true">暮</span>
-          <span><strong>KURASHI</strong><small>暮集選物所</small></span>
+        <a class="brand" href="index.html" aria-label="${brand.chineseName}首頁">
+          <span class="brand__mark" aria-hidden="true">安</span>
+          <span><strong>${brand.englishName}</strong><small>${brand.chineseName}</small></span>
         </a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">選單</button>
         <nav id="site-nav" class="site-nav" aria-label="主要導覽">${navMarkup(active)}</nav>
@@ -41,11 +44,11 @@ export function shellMarkup({ active = '', cartCount = 0 } = {}) {
       </div>`,
     footer: `
       <div class="footer-grid page-shell">
-        <div><p class="footer-brand">暮集選物所</p><p>把被好好製作的物件，帶進每天的生活。</p></div>
+        <div><p class="footer-brand">${brand.chineseName}</p><p>${brand.shortDescription}</p></div>
         <nav aria-label="頁尾導覽"><a href="products.html">所有選物</a><a href="about.html">選物原則</a><a href="faq.html">購物說明</a><a href="account.html">本機帳戶</a></nav>
         <div class="footer-note"><strong>測試商店</strong><p>付款功能僅供流程展示，未產生真實交易。</p></div>
       </div>
-      <p class="copyright page-shell">© 2026 KURASHI MARKET</p>`,
+      <p class="copyright page-shell">© 2026 ${brand.englishName}</p>`,
     mobileCart: `<a class="mobile-cart" href="cart.html"><span>查看購物車</span><strong><span data-cart-count>${cartCount}</span> 件</strong></a>`
   };
 }

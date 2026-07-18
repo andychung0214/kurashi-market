@@ -11,6 +11,9 @@ test('網站外框包含主要導覽與購物車數量', () => {
   assert.match(markup.header, /aria-current="page"/);
   assert.match(markup.header, /購物車 <span[^>]*>3<\/span>/);
   assert.match(markup.footer, /未產生真實交易/);
+  assert.match(markup.header, /AMUHARU/);
+  assert.match(markup.header, /安暮恆生活/);
+  assert.doesNotMatch(markup.header + markup.footer, /KURASHI|暮集選物所/);
 });
 
 test('設計案例卡片使用諮詢文案而非價格', () => {

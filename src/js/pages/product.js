@@ -20,14 +20,14 @@ const detailLabels = {
 };
 
 if (!product) {
-  document.title = '找不到商品｜暮集選物所';
+  document.title = '找不到商品｜安暮恆生活';
   root.innerHTML = '<section class="empty-state"><p class="eyebrow">Not found</p><h1>這件選物不在架上</h1><p>它可能已下架，或網址不完整。</p><a class="button" href="products.html">回到所有選物</a></section>';
 } else {
   state.addRecent(product.id);
   const category = enabledCategories.find((item) => item.id === product.category)?.name ?? '';
   const isService = product.kind === 'service';
   const favorites = state.getFavorites();
-  document.title = `${product.name}｜暮集選物所`;
+  document.title = `${product.name}｜安暮恆生活`;
   document.querySelector('meta[name="description"]').content = product.summary;
   document.querySelector('meta[property="og:title"]').content = product.name;
   document.querySelector('meta[property="og:description"]').content = product.summary;

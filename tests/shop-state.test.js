@@ -54,8 +54,8 @@ test('完成結帳後可保存訂單並清空購物車', () => {
 test('優惠碼跨頁保存在共用狀態', () => {
   const state = createShopState(createSafeStorage(blockedStorage), () => {});
   state.addToCart(product, 2, '預設');
-  state.setCoupon(' kurashi100 ');
-  assert.equal(state.getCoupon(), 'KURASHI100');
+  state.setCoupon(' amuharu100 ');
+  assert.equal(state.getCoupon(), 'AMUHARU100');
   assert.equal(calculateCart(state.getCart(), { coupon: state.getCoupon() }).total, 1200);
 });
 

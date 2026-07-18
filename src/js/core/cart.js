@@ -44,7 +44,7 @@ export function removeCartItem(items, productId, variant) {
 
 export function calculateCart(items, { coupon = '' } = {}) {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const discount = coupon.trim().toUpperCase() === 'KURASHI100' && subtotal >= 1000 ? 100 : 0;
+  const discount = coupon.trim().toUpperCase() === 'AMUHARU100' && subtotal >= 1000 ? 100 : 0;
   const shipping = subtotal === 0 || subtotal >= 2000 ? 0 : 100;
   return {
     subtotal,
