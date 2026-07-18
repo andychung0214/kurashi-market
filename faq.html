@@ -1,14 +1,48 @@
-<!doctype html><html lang="zh-Hant" data-theme="forest"><head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>購物說明｜暮集選物所</title>
-  <meta name="description" content="了解暮集選物所二手書況、客製喜帖、室內設計諮詢、配送與安全測試付款。"><meta property="og:title" content="購物說明｜暮集選物所"><meta property="og:type" content="website">
-  <link rel="canonical" href="https://andychung0214.github.io/kurashi-market/faq.html"><link rel="stylesheet" href="src/css/tokens.css"><link rel="stylesheet" href="src/css/base.css"><link rel="stylesheet" href="src/css/components.css"><link rel="stylesheet" href="src/css/pages.css"><script type="module" src="src/js/pages/static.js"></script>
-</head><body data-active-page="faq"><header class="site-header" data-site-header></header><main id="main-content" class="page-shell">
-  <header class="catalog-header"><div><p class="eyebrow">Before you buy</p><h1>購物說明</h1></div><p class="lede">先把狀態、期程與限制說清楚，才是舒服的購物開始。</p></header>
-  <div class="faq-layout section"><nav class="faq-nav" aria-label="購物說明主題"><a href="#books">二手書</a><a href="#invitations">客製喜帖</a><a href="#interiors">室內設計</a><a href="#payment">測試付款</a><a href="#shipping">配送與退換</a></nav><div class="faq-list">
-    <section id="books"><p class="eyebrow">Books</p><h2>二手書</h2><details open><summary>書況如何分級？</summary><p>每本書使用文字描述實際情況，包括眉批、折痕、泛黃、藏書章與書衣狀態。商品詳情的描述優先於一般分級。</p></details><details><summary>同一本書可以買多本嗎？</summary><p>依實際庫存為準。多數二手書只有一冊，購物車會自動限制數量。</p></details></section>
-    <section id="invitations"><p class="eyebrow">Invitations</p><h2>客製喜帖</h2><details><summary>價格如何計算？</summary><p>頁面價格為單份基本款，另有最低訂購量。特殊印刷、加頁或急件需要另行估價。</p></details><details><summary>多久可以收到？</summary><p>各款商品詳情列有校稿確認後的工作天數；校稿與寄送時間不包含在內。</p></details></section>
-    <section id="interiors"><p class="eyebrow">Interiors</p><h2>室內設計</h2><details><summary>為什麼案例沒有售價？</summary><p>每個空間的現況與需求不同，不能用案例照片推算費用。預約初談後才會依範圍提供正式估價。</p></details></section>
-    <section id="payment"><p class="eyebrow">Payment simulation</p><h2>測試付款</h2><details open><summary>會真的扣款嗎？</summary><p>不會。此專案是純靜態展示網站，不會呼叫綠界、不會產生 CheckMacValue，也不會向銀行或超商送出資料。</p></details><details><summary>信用卡資料會保存嗎？</summary><p>不會保存完整卡號或安全碼。請只使用畫面提供的公開測試格式。</p></details><details><summary>未來如何串接綠界？</summary><p>正式環境必須由安全的 .NET API 保存設定、產生簽章並驗證回呼，不能把金鑰放在瀏覽器程式碼。</p></details></section>
-    <section id="shipping"><p class="eyebrow">Shipping</p><h2>配送與退換</h2><details><summary>何時免運？</summary><p>展示流程以商品小計 NT$2,000 為免運門檻，實際商店上線前應重新確認政策。</p></details><details><summary>可以退換嗎？</summary><p>本網站不產生真實訂單。正式營運時應依商品性質與台灣消費者保護規範另行制定條款。</p></details></section>
-  </div></div>
-</main><footer class="site-footer" data-site-footer></footer></body></html>
+<!doctype html>
+<html lang="zh-Hant" data-theme="forest">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>購物說明｜暮集選物所</title>
+  <meta name="description" content="了解暮集選物所的商品說明、配送方式與安全測試付款。">
+  <meta property="og:title" content="購物說明｜暮集選物所">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://andychung0214.github.io/kurashi-market/faq.html">
+  <link rel="stylesheet" href="src/css/tokens.css">
+  <link rel="stylesheet" href="src/css/base.css">
+  <link rel="stylesheet" href="src/css/components.css">
+  <link rel="stylesheet" href="src/css/pages.css">
+  <script type="module" src="src/js/pages/faq.js"></script>
+</head>
+<body>
+  <header class="site-header" data-site-header></header>
+  <main id="main-content" class="page-shell">
+    <header class="catalog-header">
+      <div><p class="eyebrow">Before you buy</p><h1>購物說明</h1></div>
+      <p class="lede">先把狀態、期程與限制說清楚，才是舒服的購物開始。</p>
+    </header>
+    <div class="faq-layout section">
+      <nav class="faq-nav" aria-label="購物說明主題">
+        <span data-category-faq-nav></span>
+        <a href="#payment">測試付款</a>
+        <a href="#shipping">配送與退換</a>
+      </nav>
+      <div class="faq-list">
+        <div data-category-faq-list></div>
+        <section id="payment">
+          <p class="eyebrow">Payment simulation</p><h2>測試付款</h2>
+          <details open><summary>會真的扣款嗎？</summary><p>不會。此專案是純靜態展示網站，不會呼叫綠界、不會產生 CheckMacValue，也不會向銀行或超商送出資料。</p></details>
+          <details><summary>信用卡資料會保存嗎？</summary><p>不會保存完整卡號或安全碼。請只使用畫面提供的公開測試格式。</p></details>
+          <details><summary>未來如何串接綠界？</summary><p>正式環境必須由安全的 .NET API 保存設定、產生簽章並驗證回呼，不能把金鑰放在瀏覽器程式碼。</p></details>
+        </section>
+        <section id="shipping">
+          <p class="eyebrow">Shipping</p><h2>配送與退換</h2>
+          <details><summary>何時免運？</summary><p>展示流程以商品小計 NT$2,000 為免運門檻，實際商店上線前應重新確認政策。</p></details>
+          <details><summary>可以退換嗎？</summary><p>本網站不產生真實訂單。正式營運時應依商品性質與台灣消費者保護規範另行制定條款。</p></details>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer" data-site-footer></footer>
+</body>
+</html>

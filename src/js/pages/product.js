@@ -1,4 +1,6 @@
 import { products, categories } from '../data/products.js';
+import { storefrontConfig } from '../data/storefront.js';
+import { filterProductsByCategories, resolveEnabledCategories } from '../core/storefront.js';
 import { createSafeStorage } from '../core/storage.js';
 import { createShopState } from '../core/shop-state.js';
 import { initShell } from '../ui/shell.js';
@@ -9,7 +11,9 @@ const storage = createSafeStorage();
 const state = createShopState(storage);
 const root = document.querySelector('[data-product-detail]');
 const id = new URLSearchParams(location.search).get('id') ?? root?.dataset.productId;
-const product = products.find((item) => item.id === id);
+const enabledCategories = resolveEnabledCategories(categories, storefrontConfig.enabledCategoryIds);
+const visibleProducts = filterProductsByCategories(products, enabledCategories);
+const product = visibleProducts.find((item) => item.id === id);
 const detailLabels = {
   condition: '書況', author: '作者', publisher: '出版社', year: '出版年份', paper: '紙材', size: '尺寸', minimum: '最低訂購量', leadTime: '客製期程',
   spaceType: '空間類型', area: '坪數', style: '風格', service: '服務', material: '材質', origin: '產地', care: '照護方式'
@@ -20,7 +24,7 @@ if (!product) {
   root.innerHTML = '<section class="empty-state"><p class="eyebrow">Not found</p><h1>這件選物不在架上</h1><p>它可能已下架，或網址不完整。</p><a class="button" href="products.html">回到所有選物</a></section>';
 } else {
   state.addRecent(product.id);
-  const category = categories.find((item) => item.id === product.category)?.name ?? '';
+  const category = enabledCategories.find((item) => item.id === product.category)?.name ?? '';
   const isService = product.kind === 'service';
   const favorites = state.getFavorites();
   document.title = `${product.name}｜暮集選物所`;
@@ -55,7 +59,7 @@ if (!product) {
         <p class="status-message" data-product-status role="status"></p>
       </div>
     </article>
-    <section class="section section--rule"><div class="section-heading"><h2>也許會喜歡</h2></div><div class="product-grid">${products.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 4).map(renderProductCard).join('')}</div></section>`;
+    <section class="section section--rule"><div class="section-heading"><h2>也許會喜歡</h2></div><div class="product-grid">${visibleProducts.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 4).map(renderProductCard).join('')}</div></section>`;
 
   root.querySelector('[data-purchase-form]')?.addEventListener('submit', (event) => {
     event.preventDefault();
