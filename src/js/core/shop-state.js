@@ -102,9 +102,10 @@ export function createShopState(storage, notify = browserNotify) {
     clearCart() {
       return save(keys.cart, []);
     },
-    getCoupon: () => safeString(storage.get(keys.coupon, ''), 40),
+    getCoupon: () => safeString(storage.get(keys.coupon, ''), 40).trim().toUpperCase() === 'KURASHI100' ? 'KURASHI100' : '',
     setCoupon(coupon) {
-      return save(keys.coupon, safeString(coupon, 40).trim().toUpperCase());
+      const normalized = safeString(coupon, 40).trim().toUpperCase();
+      return save(keys.coupon, normalized === 'KURASHI100' ? normalized : '');
     }
   };
 }

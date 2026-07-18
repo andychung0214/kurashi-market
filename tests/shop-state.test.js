@@ -59,6 +59,12 @@ test('優惠碼跨頁保存在共用狀態', () => {
   assert.equal(calculateCart(state.getCart(), { coupon: state.getCoupon() }).total, 1200);
 });
 
+test('未知優惠碼與 HTML 片段不會進入持久狀態', () => {
+  const state = createShopState(createSafeStorage(blockedStorage), () => {});
+  assert.equal(state.setCoupon('\"><img src=x onerror=alert(1)>'), '');
+  assert.equal(state.getCoupon(), '');
+});
+
 test('損壞的持久資料會被安全丟棄', () => {
   const malformedStorage = createSafeStorage({
     getItem(key) {
