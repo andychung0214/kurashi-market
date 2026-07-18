@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, stat, utimes } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { categories, products } from '../src/js/data/products.js';
@@ -50,6 +50,12 @@ test('靜態產生器只保留啟用分類商品並清除舊頁', async (context
   const firstSitemap = await readFile(sitemapPath, 'utf8');
   assert.match(firstSitemap, /one-item\.html/);
   assert.doesNotMatch(firstSitemap, /two-item\.html/);
+
+  const generatedProductPath = join(productDirectory, 'one-item.html');
+  const fixedTime = new Date('2000-01-01T00:00:00.000Z');
+  await utimes(generatedProductPath, fixedTime, fixedTime);
+  await generateStaticCatalog({ categoryData, productData, enabledCategoryIds: ['one'], productDirectory, sitemapPath, siteUrl: 'https://example.com' });
+  assert.equal((await stat(generatedProductPath)).mtime.getUTCFullYear(), 2000);
 
   await generateStaticCatalog({ categoryData, productData, enabledCategoryIds: [], productDirectory, sitemapPath, siteUrl: 'https://example.com' });
   assert.deepEqual(await readdir(productDirectory), []);

@@ -1,4 +1,4 @@
-import { mkdir, readdir, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createProductSchema } from '../src/js/core/schema.js';
@@ -9,6 +9,17 @@ import { storefrontConfig } from '../src/js/data/storefront.js';
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
 })[character]);
+
+async function writeFileIfChanged(path, content) {
+  try {
+    if (await readFile(path, 'utf8') === content) return false;
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+
+  await writeFile(path, content, 'utf8');
+  return true;
+}
 
 function productHtml(product, siteUrl, brand) {
   const url = `${siteUrl}/products/${product.id}.html`;
@@ -49,7 +60,7 @@ export async function generateStaticCatalog({
   await Promise.all(existingFiles.filter((name) => !expectedFiles.has(name))
     .map((name) => unlink(join(productDirectory, name))));
   await Promise.all(visibleProducts.map((product) =>
-    writeFile(join(productDirectory, `${product.id}.html`), productHtml(product, normalizedSiteUrl, brand), 'utf8')));
+    writeFileIfChanged(join(productDirectory, `${product.id}.html`), productHtml(product, normalizedSiteUrl, brand))));
 
   const urls = ['', 'products.html', 'about.html', 'faq.html', ...visibleProducts.map((product) => `products/${product.id}.html`)];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -58,7 +69,7 @@ ${urls.map((path) => `  <url><loc>${normalizedSiteUrl}/${path}</loc></url>`).joi
 </urlset>
 `;
   await mkdir(dirname(sitemapPath), { recursive: true });
-  await writeFile(sitemapPath, sitemap, 'utf8');
+  await writeFileIfChanged(sitemapPath, sitemap);
   return { categories: enabledCategories, products: visibleProducts };
 }
 
