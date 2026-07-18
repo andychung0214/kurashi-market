@@ -1,10 +1,32 @@
 const image = (id, width = 1200) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=82`;
 
 export const categories = [
-  { id: 'books', name: '二手書', note: '留有時間手感的閱讀選本' },
-  { id: 'invitations', name: '喜帖', note: '讓紙張替重要日子開口' },
-  { id: 'interiors', name: '室內設計', note: '安放日常的空間提案' },
-  { id: 'goods', name: '百貨雜物', note: '經得起每日使用的器物' }
+  {
+    id: 'books', name: '二手書', mark: '本', note: '留有時間手感的閱讀選本',
+    faq: [
+      { question: '書況如何說明？', answer: '每本書會記錄眉批、折痕、泛黃、藏書章與書衣狀態；商品詳情的描述優先於一般分級。' },
+      { question: '同一本書可以買多本嗎？', answer: '依實際庫存為準。多數二手書只有一冊，購物車會自動限制數量。' }
+    ]
+  },
+  {
+    id: 'invitations', name: '喜帖', mark: '紙', note: '讓紙張替重要日子開口',
+    faq: [
+      { question: '價格如何計算？', answer: '頁面價格為單份基本款，另有最低訂購量。特殊印刷、加頁或急件需要另行估價。' },
+      { question: '多久可以收到？', answer: '各款商品詳情列有校稿確認後的工作天數；校稿與寄送時間不包含在內。' }
+    ]
+  },
+  {
+    id: 'interiors', name: '室內設計', mark: '間', note: '安放日常的空間提案',
+    faq: [
+      { question: '為什麼案例沒有售價？', answer: '每個空間的現況與需求不同，不能用案例照片推算費用。預約初談後才會依範圍提供正式估價。' }
+    ]
+  },
+  {
+    id: 'goods', name: '百貨雜物', mark: '器', note: '經得起每日使用的器物',
+    faq: [
+      { question: '如何確認材質與照護方式？', answer: '每件商品會在詳情列出材質、尺寸、產地與照護方式；手工製品的自然差異也會另外說明。' }
+    ]
+  }
 ];
 
 export const products = [
