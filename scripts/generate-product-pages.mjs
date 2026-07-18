@@ -1,7 +1,9 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { products } from '../src/js/data/products.js';
+import { storefrontConfig } from '../src/js/data/storefront.js';
 
 const site = 'https://andychung0214.github.io/kurashi-market';
+const brandName = storefrontConfig.brand.chineseName;
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
 })[character]);
@@ -23,10 +25,10 @@ function productHtml(product) {
   return `<!doctype html>
 <html lang="zh-Hant" data-theme="forest"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="../">
-  <title>${escapeHtml(product.name)}｜暮集選物所</title>
+  <title>${escapeHtml(product.name)}｜${escapeHtml(brandName)}</title>
   <meta name="description" content="${escapeHtml(product.summary)}">
   <meta property="og:type" content="${product.kind === 'service' ? 'website' : 'product'}">
-  <meta property="og:title" content="${escapeHtml(product.name)}｜暮集選物所">
+  <meta property="og:title" content="${escapeHtml(product.name)}｜${escapeHtml(brandName)}">
   <meta property="og:description" content="${escapeHtml(product.summary)}">
   <meta property="og:image" content="${escapeHtml(product.images[0])}">
   <meta property="og:url" content="${url}"><link rel="canonical" href="${url}">
