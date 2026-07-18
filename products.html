@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="forest">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>所有選物｜暮集選物所</title>
+  <meta name="description" content="搜尋與篩選暮集選物所的二手書、喜帖、室內設計案例與百貨雜物。">
+  <meta property="og:title" content="所有選物｜暮集選物所">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://andychung0214.github.io/kurashi-market/products.html">
+  <link rel="stylesheet" href="src/css/tokens.css"><link rel="stylesheet" href="src/css/base.css">
+  <link rel="stylesheet" href="src/css/components.css"><link rel="stylesheet" href="src/css/pages.css">
+  <script type="module" src="src/js/pages/products.js"></script>
+</head>
+<body>
+  <header class="site-header" data-site-header></header>
+  <main id="main-content" class="page-shell">
+    <header class="catalog-header">
+      <div><p class="eyebrow">The whole collection</p><h1>所有選物</h1></div>
+      <p class="lede">物件不必嶄新，但它的來處、狀態與用途，都應該被好好說明。</p>
+    </header>
+    <div class="filter-layout">
+      <aside>
+        <form class="filters" data-filter-form>
+          <div class="form-field"><label for="query">搜尋</label><input id="query" name="query" type="search" placeholder="書名、材質、風格"></div>
+          <div class="form-field"><label for="category">分類</label><select id="category" name="category"><option value="all">全部分類</option><option value="books">二手書</option><option value="invitations">喜帖</option><option value="interiors">室內設計</option><option value="goods">百貨雜物</option></select></div>
+          <div class="form-field"><label for="min-price">最低價格</label><input id="min-price" name="minPrice" type="number" min="0" step="50" inputmode="numeric"></div>
+          <div class="form-field"><label for="max-price">最高價格</label><input id="max-price" name="maxPrice" type="number" min="0" step="50" inputmode="numeric"></div>
+          <div class="filter-actions"><button class="button" type="submit">套用條件</button><a class="button button--ghost" href="products.html">清除</a></div>
+        </form>
+      </aside>
+      <section aria-labelledby="results-title">
+        <div class="results-head"><p id="results-title" data-results-count aria-live="polite"></p><div class="form-field"><label for="sort">排序</label><select id="sort" class="select" data-sort><option value="featured">店主推薦</option><option value="price-asc">價格由低至高</option><option value="price-desc">價格由高至低</option><option value="name">名稱</option></select></div></div>
+        <div class="product-grid" data-product-results></div>
+        <div class="pagination" data-pagination aria-label="商品分頁"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer" data-site-footer></footer>
+</body>
+</html>
