@@ -13,6 +13,7 @@
 - JavaScript 使用原生 ES Modules，不加入大型框架或不必要相依套件。
 - CSS 優先重用現有 Token 與元件類別，保持可見焦點與 44px 觸控區域。
 - 業務計算維持純函式，DOM 操作留在 `src/js/pages` 或 `src/js/ui`。
+- 商品分類先加入 `src/js/data/products.js`，再由 `src/js/data/storefront.js` 控制啟用與順序；不得在 HTML 寫死分類選項。
 
 ## Commit 訊息
 
