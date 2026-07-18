@@ -1,0 +1,35 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / .42) 0 1px, transparent 1.5px) 0 0 / 19px 23px,
+    var(--paper);
+  font-family: var(--body);
+  font-size: var(--step-0);
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-underline-offset: .24em; }
+button, input, select, textarea { font: inherit; }
+button, select { cursor: pointer; }
+h1, h2, h3, p { margin-block-start: 0; }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; line-height: 1.18; letter-spacing: -.025em; }
+h1 { font-size: var(--step-4); }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.page-shell { width: min(calc(100% - 2rem), 90rem); margin-inline: auto; }
+.section { padding-block: var(--space-6); }
+.section--rule { border-top: 1px solid var(--line); }
+.eyebrow { font-family: var(--utility); font-size: var(--step--1); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.lede { max-width: 42rem; font-family: var(--display); font-size: var(--step-1); }
+.muted { color: var(--muted); }
+.skip-link { position: fixed; z-index: 1000; left: 1rem; top: 1rem; transform: translateY(-180%); background: var(--ink); color: white; padding: .75rem 1rem; }
+.skip-link:focus { transform: none; }
+.sr-only { position: absolute!important; width: 1px!important; height: 1px!important; padding: 0!important; margin: -1px!important; overflow: hidden!important; clip: rect(0,0,0,0)!important; white-space: nowrap!important; border: 0!important; }
+@media (min-width: 48rem) { .page-shell { width: min(calc(100% - 3rem), 90rem); } }
+@media (min-width: 75rem) { .page-shell { width: min(calc(100% - 5rem), 90rem); } }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
