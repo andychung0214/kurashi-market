@@ -31,3 +31,25 @@ export function createTestPayment(method, order) {
     notice: '測試付款模擬：未產生真實交易。'
   };
 }
+
+export function createSimulationOrder(input, cart, totals) {
+  const id = `KM-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+  const customer = {
+    name: input.name.trim(),
+    email: input.email.trim(),
+    phone: input.phone.replace(/[\s-]/g, ''),
+    address: input.address.trim(),
+    delivery: input.delivery,
+    invoice: input.invoice,
+    paymentMethod: input.paymentMethod
+  };
+  return {
+    id,
+    createdAt: new Date().toISOString(),
+    customer,
+    items: cart.map((item) => ({ ...item })),
+    totals: { ...totals },
+    payment: createTestPayment(input.paymentMethod, { id, total: totals.total }),
+    status: '測試訂單'
+  };
+}

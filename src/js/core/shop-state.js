@@ -3,7 +3,8 @@ import { addCartItem, updateCartQuantity, removeCartItem } from './cart.js';
 const keys = {
   cart: 'kurashi.cart',
   favorites: 'kurashi.favorites',
-  recent: 'kurashi.recent'
+  recent: 'kurashi.recent',
+  orders: 'kurashi.orders'
 };
 
 function browserNotify() {
@@ -40,6 +41,13 @@ export function createShopState(storage, notify = browserNotify) {
     addRecent(productId) {
       const recent = storage.get(keys.recent, []).filter((id) => id !== productId);
       return save(keys.recent, [productId, ...recent].slice(0, 8));
+    },
+    getOrders: () => storage.get(keys.orders, []),
+    saveOrder(order) {
+      return save(keys.orders, [order, ...storage.get(keys.orders, [])].slice(0, 20));
+    },
+    clearCart() {
+      return save(keys.cart, []);
     }
   };
 }

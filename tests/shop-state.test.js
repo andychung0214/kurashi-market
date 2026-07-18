@@ -37,3 +37,12 @@ test('最近瀏覽去除重複並只保留八筆', () => {
   assert.equal(state.getRecent().length, 8);
   assert.equal(state.getRecent()[0], 'item-4');
 });
+
+test('完成結帳後可保存訂單並清空購物車', () => {
+  const state = createShopState(createSafeStorage(blockedStorage), () => {});
+  state.addToCart(product, 1, '預設');
+  state.saveOrder({ id: 'KM-TEST', total: 700 });
+  state.clearCart();
+  assert.equal(state.getOrders()[0].id, 'KM-TEST');
+  assert.deepEqual(state.getCart(), []);
+});

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validateCheckout, createTestPayment } from '../src/js/core/checkout.js';
+import { validateCheckout, createTestPayment, createSimulationOrder } from '../src/js/core/checkout.js';
 
 const valid = {
   name: '林森', email: 'lin@example.com', phone: '0912345678', address: '台北市中山區一號',
@@ -27,4 +27,13 @@ test('ATM 只產生明確的測試付款資訊', () => {
 
 test('不支援的付款方式會被拒絕', () => {
   assert.throws(() => createTestPayment('cash', { id: 'KM-1', total: 100 }), /不支援/);
+});
+
+test('模擬訂單不保存完整卡號或安全碼', () => {
+  const order = createSimulationOrder({ ...valid, paymentMethod: 'card', cardNumber: '4242424242424242', cvv: '123' },
+    [{ productId: 'book-1', price: 600, quantity: 1 }], { subtotal: 600, discount: 0, shipping: 100, total: 700 });
+  assert.equal('cardNumber' in order.customer, false);
+  assert.equal('cvv' in order.customer, false);
+  assert.equal(order.payment.isSimulation, true);
+  assert.match(order.id, /^KM-/);
 });

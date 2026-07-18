@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-Hant" data-theme="forest"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>測試結帳｜暮集選物所</title>
+  <meta name="description" content="暮集選物所安全測試結帳，不會產生真實交易。"><meta name="robots" content="noindex">
+  <link rel="stylesheet" href="src/css/tokens.css"><link rel="stylesheet" href="src/css/base.css"><link rel="stylesheet" href="src/css/components.css"><link rel="stylesheet" href="src/css/pages.css"><script type="module" src="src/js/pages/checkout.js"></script>
+</head><body><header class="site-header" data-site-header></header><main id="main-content" class="page-shell">
+  <header class="catalog-header"><div><p class="eyebrow">Simulation checkout</p><h1>測試結帳</h1></div><div class="simulation-banner"><strong>這是安全流程展示</strong><p>不會連接綠界、不會扣款，也不會產生真實交易。</p></div></header>
+  <div class="checkout-layout section" data-checkout-root>
+    <form class="checkout-form" data-checkout-form novalidate>
+      <div class="error-summary" data-error-summary role="alert" tabindex="-1" hidden></div>
+      <fieldset><legend>聯絡與配送</legend><div class="form-grid">
+        <div class="form-field"><label for="name">收件人姓名</label><input id="name" name="name" autocomplete="name" required><p class="error-text" id="error-name"></p></div>
+        <div class="form-field"><label for="email">電子郵件</label><input id="email" name="email" type="email" autocomplete="email" required><p class="error-text" id="error-email"></p></div>
+        <div class="form-field"><label for="phone">手機號碼</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="0912345678" required><p class="error-text" id="error-phone"></p></div>
+        <div class="form-field form-field--full"><label for="address">配送地址</label><input id="address" name="address" autocomplete="street-address" required><p class="error-text" id="error-address"></p></div>
+      </div></fieldset>
+      <fieldset><legend>配送方式</legend><div class="choice-grid"><label class="choice-card"><input type="radio" name="delivery" value="home" checked><span><strong>宅配</strong><small>2–4 個工作天</small></span></label><label class="choice-card"><input type="radio" name="delivery" value="store"><span><strong>超商取貨</strong><small>3–5 個工作天</small></span></label></div><p class="error-text" id="error-delivery"></p></fieldset>
+      <fieldset><legend>發票</legend><div class="choice-grid"><label class="choice-card"><input type="radio" name="invoice" value="electronic" checked><span><strong>電子發票</strong><small>寄至電子郵件</small></span></label><label class="choice-card"><input type="radio" name="invoice" value="donate"><span><strong>捐贈發票</strong><small>測試流程展示</small></span></label></div><p class="error-text" id="error-invoice"></p></fieldset>
+      <fieldset><legend>測試付款方式</legend><div class="payment-choices">
+        <label class="choice-card"><input type="radio" name="paymentMethod" value="card" checked><span><strong>信用卡</strong><small>測試 Visa 格式</small></span></label>
+        <label class="choice-card"><input type="radio" name="paymentMethod" value="atm"><span><strong>ATM</strong><small>產生測試參考碼</small></span></label>
+        <label class="choice-card"><input type="radio" name="paymentMethod" value="cvs"><span><strong>超商代碼</strong><small>產生測試繳費碼</small></span></label>
+      </div><p class="error-text" id="error-paymentMethod"></p>
+      <div class="card-fields" data-card-fields><p class="simulation-note">請使用公開測試格式：4242 4242 4242 4242。資料只用於當下驗證，不會保存。</p><div class="form-grid"><div class="form-field form-field--full"><label for="cardNumber">測試卡號</label><input id="cardNumber" name="cardNumber" inputmode="numeric" autocomplete="off" placeholder="4242 4242 4242 4242"><p class="error-text" id="error-cardNumber"></p></div><div class="form-field"><label for="cvv">測試安全碼</label><input id="cvv" name="cvv" inputmode="numeric" autocomplete="off" maxlength="3" placeholder="123"><p class="error-text" id="error-cvv"></p></div></div></div>
+      </fieldset>
+      <label class="consent"><input type="checkbox" name="simulationConsent" required><span>我了解這是模擬付款，不會產生真實交易。</span></label><p class="error-text" id="error-simulationConsent"></p>
+      <button class="button button--ink submit-order" type="submit" data-submit-order>建立測試訂單</button>
+    </form>
+    <aside class="order-summary" data-checkout-summary></aside>
+  </div>
+</main><footer class="site-footer" data-site-footer></footer></body></html>
